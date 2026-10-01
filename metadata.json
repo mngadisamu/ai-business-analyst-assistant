@@ -1,0 +1,6 @@
+{
+  "name": "AI Business Analyst Assistant",
+  "description": "Transform raw, unstructured business requirements into clear BA artifacts: User Stories, Gherkin Acceptance Criteria, Test Cases, and Clarification Questions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
