@@ -1,0 +1,898 @@
+<!DOCTYPE html><html lang="en" class="h-full"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Business Analyst Assistant</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        ba: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Highlight.js for code/table blocks -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" crossorigin="anonymous"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.7); }
+        
+        .message-content pre {
+            background-color: #0f172a !important;
+            color: #e2e8f0 !important;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            overflow-x: auto;
+        }
+        .message-content code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.875rem;
+        }
+        .message-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+        }
+        .message-content th, .message-content td {
+            border: 1px solid #cbd5e1;
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+        }
+        .dark .message-content th, .dark .message-content td {
+            border-color: #334155;
+        }
+        .message-content th {
+            background-color: #f1f5f9;
+        }
+        .dark .message-content th {
+            background-color: #1e293b;
+        }
+        .message-content p { margin-bottom: 0.75rem; }
+        .message-content p:last-child { margin-bottom: 0; }
+        .message-content ul, .message-content ol { margin-left: 1.5rem; margin-bottom: 0.75rem; }
+        .message-content ul { list-style-type: disc; }
+        .message-content ol { list-style-type: decimal; }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.inset-y-0{top:0px;bottom:0px}.left-0{left:0px}.right-2\.5{right:0.625rem}.z-10{z-index:10}.z-20{z-index:20}.z-30{z-index:30}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.ml-1\.5{margin-left:0.375rem}.ml-2{margin-left:0.5rem}.mt-0\.5{margin-top:0.125rem}.mt-2{margin-top:0.5rem}.mt-3{margin-top:0.75rem}.line-clamp-2{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-full{height:100%}.h-10{height:2.5rem}.h-16{height:4rem}.h-2{height:0.5rem}.h-8{height:2rem}.h-9{height:2.25rem}.max-h-36{max-height:9rem}.max-h-\[85vh\]{max-height:85vh}.w-10{width:2.5rem}.w-16{width:4rem}.w-2{width:0.5rem}.w-72{width:18rem}.w-8{width:2rem}.w-9{width:2.25rem}.w-full{width:100%}.min-w-0{min-width:0px}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-\[200px\]{max-width:200px}.max-w-md{max-width:28rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.-translate-x-full{--tw-translate-x:-100%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes bounce{0%, 100%{transform:translateY(-25%);animation-timing-function:cubic-bezier(0.8,0,1,1)}50%{transform:none;animation-timing-function:cubic-bezier(0,0,0.2,1)}}.animate-bounce{animation:bounce 1s infinite}.cursor-pointer{cursor:pointer}.resize-none{resize:none}.list-disc{list-style-type:disc}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-2\.5{gap:0.625rem}.space-x-1\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.375rem * var(--tw-space-x-reverse));margin-left:calc(0.375rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-2 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.5rem * var(--tw-space-x-reverse));margin-left:calc(0.5rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-2\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.625rem * var(--tw-space-x-reverse));margin-left:calc(0.625rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-3 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.75rem * var(--tw-space-x-reverse));margin-left:calc(0.75rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.space-y-1\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.375rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.375rem * var(--tw-space-y-reverse))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded-tl-sm{border-top-left-radius:0.125rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-r{border-right-width:1px}.border-t{border-top-width:1px}.border-amber-500\/20{border-color:rgb(245 158 11 / 0.2)}.border-sky-200{--tw-border-opacity:1;border-color:rgb(186 230 253 / var(--tw-border-opacity, 1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-amber-500\/10{background-color:rgb(245 158 11 / 0.1)}.bg-emerald-600{--tw-bg-opacity:1;background-color:rgb(5 150 105 / var(--tw-bg-opacity, 1))}.bg-sky-100{--tw-bg-opacity:1;background-color:rgb(224 242 254 / var(--tw-bg-opacity, 1))}.bg-sky-50{--tw-bg-opacity:1;background-color:rgb(240 249 255 / var(--tw-bg-opacity, 1))}.bg-sky-500{--tw-bg-opacity:1;background-color:rgb(14 165 233 / var(--tw-bg-opacity, 1))}.bg-sky-600{--tw-bg-opacity:1;background-color:rgb(2 132 199 / var(--tw-bg-opacity, 1))}.bg-sky-600\/10{background-color:rgb(2 132 199 / 0.1)}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.bg-slate-200{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.bg-slate-900\/50{background-color:rgb(15 23 42 / 0.5)}.bg-slate-900\/60{background-color:rgb(15 23 42 / 0.6)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/80{background-color:rgb(255 255 255 / 0.8)}.p-1\.5{padding:0.375rem}.p-2{padding:0.5rem}.p-3{padding:0.75rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-1{padding:0.25rem}.px-1{padding-left:0.25rem;padding-right:0.25rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.pl-4{padding-left:1rem}.pl-5{padding-left:1.25rem}.pr-14{padding-right:3.5rem}.text-left{text-align:left}.text-center{text-align:center}.font-sans{font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"}.font-mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}.text-2xl{font-size:1.5rem;line-height:2rem}.text-\[10px\]{font-size:10px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.tracking-tight{letter-spacing:-0.025em}.tracking-wider{letter-spacing:0.05em}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.text-amber-500{--tw-text-opacity:1;color:rgb(245 158 11 / var(--tw-text-opacity, 1))}.text-amber-700{--tw-text-opacity:1;color:rgb(180 83 9 / var(--tw-text-opacity, 1))}.text-emerald-500{--tw-text-opacity:1;color:rgb(16 185 129 / var(--tw-text-opacity, 1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105 / var(--tw-text-opacity, 1))}.text-purple-500{--tw-text-opacity:1;color:rgb(168 85 247 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-sky-500{--tw-text-opacity:1;color:rgb(14 165 233 / var(--tw-text-opacity, 1))}.text-sky-600{--tw-text-opacity:1;color:rgb(2 132 199 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.underline{-webkit-text-decoration-line:underline;text-decoration-line:underline}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.opacity-0{opacity:0}.opacity-70{opacity:0.7}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sky-600\/25{--tw-shadow-color:rgb(2 132 199 / 0.25);--tw-shadow:var(--tw-shadow-colored)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.\[animation-delay\:0\.2s\]{animation-delay:0.2s}.\[animation-delay\:0\.4s\]{animation-delay:0.4s}.hover\:border-emerald-500:hover{--tw-border-opacity:1;border-color:rgb(16 185 129 / var(--tw-border-opacity, 1))}.hover\:border-sky-500:hover{--tw-border-opacity:1;border-color:rgb(14 165 233 / var(--tw-border-opacity, 1))}.hover\:bg-emerald-700:hover{--tw-bg-opacity:1;background-color:rgb(4 120 87 / var(--tw-bg-opacity, 1))}.hover\:bg-red-50:hover{--tw-bg-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity, 1))}.hover\:bg-sky-100:hover{--tw-bg-opacity:1;background-color:rgb(224 242 254 / var(--tw-bg-opacity, 1))}.hover\:bg-sky-700:hover{--tw-bg-opacity:1;background-color:rgb(3 105 161 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-100:hover{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-200:hover{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-300:hover{--tw-bg-opacity:1;background-color:rgb(203 213 225 / var(--tw-bg-opacity, 1))}.hover\:text-amber-800:hover{--tw-text-opacity:1;color:rgb(146 64 14 / var(--tw-text-opacity, 1))}.hover\:text-slate-700:hover{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.hover\:text-slate-800:hover{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.hover\:text-red-500:hover{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.hover\:shadow:hover{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-sky-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(14 165 233 / var(--tw-ring-opacity, 1))}.disabled\:opacity-50:disabled{opacity:0.5}.group:hover .group-hover\:opacity-100{opacity:1}.dark\:border-sky-800:is(.dark *){--tw-border-opacity:1;border-color:rgb(7 89 133 / var(--tw-border-opacity, 1))}.dark\:border-slate-700:is(.dark *){--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.dark\:border-slate-800:is(.dark *){--tw-border-opacity:1;border-color:rgb(30 41 59 / var(--tw-border-opacity, 1))}.dark\:bg-slate-950:is(.dark *){--tw-bg-opacity:1;background-color:rgb(2 6 23 / var(--tw-bg-opacity, 1))}.dark\:bg-sky-950\/40:is(.dark *){background-color:rgb(8 47 73 / 0.4)}.dark\:bg-sky-950\/50:is(.dark *){background-color:rgb(8 47 73 / 0.5)}.dark\:bg-slate-800:is(.dark *){--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.dark\:bg-slate-800\/40:is(.dark *){background-color:rgb(30 41 59 / 0.4)}.dark\:bg-slate-800\/50:is(.dark *){background-color:rgb(30 41 59 / 0.5)}.dark\:bg-slate-900:is(.dark *){--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.dark\:bg-slate-900\/50:is(.dark *){background-color:rgb(15 23 42 / 0.5)}.dark\:bg-slate-900\/80:is(.dark *){background-color:rgb(15 23 42 / 0.8)}.dark\:text-slate-100:is(.dark *){--tw-text-opacity:1;color:rgb(241 245 249 / var(--tw-text-opacity, 1))}.dark\:text-amber-400:is(.dark *){--tw-text-opacity:1;color:rgb(251 191 36 / var(--tw-text-opacity, 1))}.dark\:text-emerald-400:is(.dark *){--tw-text-opacity:1;color:rgb(52 211 153 / var(--tw-text-opacity, 1))}.dark\:text-red-400:is(.dark *){--tw-text-opacity:1;color:rgb(248 113 113 / var(--tw-text-opacity, 1))}.dark\:text-sky-400:is(.dark *){--tw-text-opacity:1;color:rgb(56 189 248 / var(--tw-text-opacity, 1))}.dark\:text-slate-200:is(.dark *){--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity, 1))}.dark\:text-slate-300:is(.dark *){--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.dark\:text-slate-400:is(.dark *){--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.dark\:text-white:is(.dark *){--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.dark\:hover\:border-sky-500:hover:is(.dark *){--tw-border-opacity:1;border-color:rgb(14 165 233 / var(--tw-border-opacity, 1))}.dark\:hover\:bg-red-950\/30:hover:is(.dark *){background-color:rgb(69 10 10 / 0.3)}.dark\:hover\:bg-sky-900\/50:hover:is(.dark *){background-color:rgb(12 74 110 / 0.5)}.dark\:hover\:bg-slate-700:hover:is(.dark *){--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.dark\:hover\:bg-slate-800:hover:is(.dark *){--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.dark\:hover\:bg-slate-900:hover:is(.dark *){--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.dark\:hover\:text-slate-200:hover:is(.dark *){--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity, 1))}.dark\:focus\:ring-sky-400:focus:is(.dark *){--tw-ring-opacity:1;--tw-ring-color:rgb(56 189 248 / var(--tw-ring-opacity, 1))}@media (min-width: 640px){.sm\:inline{display:inline}.sm\:max-w-md{max-width:28rem}.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:p-6{padding:1.5rem}.sm\:text-base{font-size:1rem;line-height:1.5rem}}@media (min-width: 768px){.md\:static{position:static}.md\:hidden{display:none}.md\:translate-x-0{--tw-translate-x:0px;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.md\:shadow-none{--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}}</style></head>
+<body class="h-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans antialiased flex flex-col overflow-hidden">
+
+    <div id="app" class="flex h-full w-full relative">
+
+        <!-- Mobile Sidebar Backdrop -->
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/50 z-20 hidden md:hidden transition-opacity"></div>
+
+        <!-- Sidebar: Conversations & Navigation -->
+        <aside id="sidebar" class="fixed md:static inset-y-0 left-0 z-30 w-72 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-transform duration-300 -translate-x-full md:translate-x-0 shadow-lg md:shadow-none">
+            <!-- Sidebar Header -->
+            <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <div class="flex items-center space-x-2.5">
+                    <div class="h-9 w-9 rounded-xl bg-sky-600 flex items-center justify-center text-white shadow-md shadow-sky-600/25">
+                        <i class="fa-solid fa-briefcase text-sm"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-sm tracking-tight block">BA Assistant Studio</span>
+                        <span class="text-[10px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">Prompt Library Enforced</span>
+                    </div>
+                </div>
+                <button id="close-sidebar" class="md:hidden text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 p-2 rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- New Chat Button -->
+            <div class="p-4">
+                <button id="new-chat-btn" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-medium py-2.5 px-4 rounded-xl shadow-sm hover:shadow transition flex items-center justify-center space-x-2 text-sm">
+                    <i class="fa-solid fa-plus text-xs"></i>
+                    <span>New Requirement Session</span>
+                </button>
+            </div>
+
+            <!-- Chat History List -->
+            <div class="flex-1 overflow-y-auto px-3 space-y-1" id="chat-list"><div class="group flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium cursor-pointer transition bg-sky-50 dark:bg-sky-950/40 text-sky-600 dark:text-sky-400">
+                    <div class="flex items-center space-x-3 truncate flex-1">
+                        <i class="fa-solid fa-file-lines text-xs opacity-70"></i>
+                        <span class="truncate">New Requirement Session</span>
+                    </div>
+                    <button class="delete-chat opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-500 p-1 transition" data-id="ba_chat_1791446100504" title="Delete session">
+                        <i class="fa-solid fa-trash-can text-xs"></i>
+                    </button>
+                </div></div>
+
+            <!-- Sidebar Footer -->
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800 space-y-2">
+                <button id="settings-btn" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <i class="fa-solid fa-key text-amber-500"></i>
+                    <span>API Key Settings</span>
+                </button>
+                <button id="master-prompt-info-btn" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <i class="fa-solid fa-file-shield text-sky-500"></i>
+                    <span>Master Prompt Rules</span>
+                </button>
+                <button id="verify-rules-btn" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/40 hover:bg-sky-100 dark:hover:bg-sky-900/50 transition border border-sky-200 dark:border-sky-800">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Verify Rule Compliance</span>
+                </button>
+                <button id="prompt-library-btn" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <i class="fa-solid fa-book-bookmark text-emerald-500"></i>
+                    <span>Prompt Library &amp; Tasks</span>
+                </button>
+                <button id="theme-toggle" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <i class="fa-solid fa-moon text-slate-400" id="theme-icon"></i>
+                    <span id="theme-text">Dark Mode</span>
+                </button>
+                <button id="clear-all-btn" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition">
+                    <i class="fa-solid fa-trash-can"></i>
+                    <span>Clear All History</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="flex-1 flex flex-col h-full bg-slate-50 dark:bg-slate-950 min-w-0">
+            <!-- Header -->
+            <header class="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md flex items-center justify-between px-4 z-10">
+                <div class="flex items-center space-x-3">
+                    <button id="open-sidebar" class="md:hidden text-slate-600 dark:text-slate-300 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+                        <i class="fa-solid fa-bars text-lg"></i>
+                    </button>
+                    <div>
+                        <h1 id="current-chat-title" class="font-semibold text-sm sm:text-base text-slate-800 dark:text-slate-100 truncate max-w-[200px] sm:max-w-md">New Requirement Session</h1>
+                        <p id="current-mode-badge" class="text-xs text-sky-600 dark:text-sky-400 font-medium">Mode: Prompt Library Enforced</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button id="export-chat-btn" title="Export Documentation" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition text-sm">
+                        <i class="fa-solid fa-download"></i>
+                        <span class="hidden sm:inline ml-1.5 text-xs">Export Markdown</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- API Key Warning Banner if missing -->
+            <div id="api-warning-banner" class="bg-amber-500/10 border-b border-amber-500/20 px-4 py-2.5 text-xs text-amber-700 dark:text-amber-400 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>No Gemini API key detected. Please configure your API key in settings to enable live AI responses.</span>
+                </div>
+                <button id="banner-settings-btn" class="font-semibold underline hover:text-amber-800">Configure Key</button>
+            </div>
+
+            <!-- Chat Messages Container -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6"><div id="empty-state" class="h-full flex flex-col items-center justify-center text-center p-6 max-w-xl mx-auto">
+                    <div class="h-16 w-16 rounded-2xl bg-sky-100 dark:bg-sky-950/50 flex items-center justify-center text-sky-600 dark:text-sky-400 mb-4 shadow-inner">
+                        <i class="fa-solid fa-file-contract text-2xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold mb-2">AI Business Analyst Assistant</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Powered by your exact prompt library. Enter requirements or pick a prompt library task below.</p>
+                    
+                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 w-full text-left">Quick Library Task Prompts</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full text-left">
+                        <button class="quick-prompt p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-sky-500 dark:hover:border-sky-500 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900 transition flex items-start space-x-2.5" data-prompt="Using only the requirement below, pull out the main business need, stakeholder, requested functionality, objectives, gaps, ambiguities, assumptions, and risks. Separate provided information from AI assumptions. Requirement: Employees should be able to apply for leave online.">
+                            <i class="fa-solid fa-magnifying-glass text-sky-500 mt-0.5"></i>
+                            <span class="line-clamp-2">Task 1: Requirement Analysis (Leave Application)</span>
+                        </button>
+                        <button class="quick-prompt p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-sky-500 dark:hover:border-sky-500 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900 transition flex items-start space-x-2.5" data-prompt="Using only the requirement below, write a single User Story in the format: As a [user], I want [function], so that [benefit]. Do not add unsupported functionality. Requirement: Customers want to track their order status in real time.">
+                            <i class="fa-solid fa-user-check text-amber-500 mt-0.5"></i>
+                            <span class="line-clamp-2">Task 2: User Story (Order Tracking)</span>
+                        </button>
+                        <button class="quick-prompt p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-sky-500 dark:hover:border-sky-500 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900 transition flex items-start space-x-2.5" data-prompt="Using only the requirement below, write acceptance criteria in Given/When/Then format. Include positive and negative scenarios. Do not create rules that were not provided. Mark unknown rules as Requires clarification. Requirement: Admin users need to reset user passwords securely.">
+                            <i class="fa-solid fa-list-check text-emerald-500 mt-0.5"></i>
+                            <span class="line-clamp-2">Task 3: Acceptance Criteria (Password Reset)</span>
+                        </button>
+                        <button class="quick-prompt p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-sky-500 dark:hover:border-sky-500 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900 transition flex items-start space-x-2.5" data-prompt="Switch to Prompt Engineering Mode. Analyse this prompt for weaknesses, explain improvements, produce an improved prompt, and explain expected output improvements. Prompt to evaluate: Write a user story for login.">
+                            <i class="fa-solid fa-wand-magic-sparkles text-purple-500 mt-0.5"></i>
+                            <span class="line-clamp-2">Task 6: Prompt Engineering Mode</span>
+                        </button>
+                    </div>
+                </div></div>
+
+            <!-- Typing Indicator -->
+            <div id="typing-indicator" class="px-6 py-2 hidden">
+                <div class="flex items-center space-x-2 text-slate-400 text-sm">
+                    <div class="h-8 w-8 rounded-full bg-sky-600/10 text-sky-600 flex items-center justify-center text-xs">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-2.5 rounded-2xl rounded-tl-sm flex space-x-1.5 items-center">
+                        <div class="w-2 h-2 bg-sky-500 rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 bg-sky-500 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                        <div class="w-2 h-2 bg-sky-500 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+                        <span class="text-xs ml-2 text-slate-500 font-medium">Executing prompt library task...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input Footer -->
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
+                <div class="max-w-4xl mx-auto">
+                    <form id="chat-form" class="relative flex items-center">
+                        <textarea id="user-input" rows="1" placeholder="Type requirement or select from prompt library... (Shift+Enter for new line)" class="w-full pl-4 pr-14 py-3.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 text-sm resize-none max-h-36 transition"></textarea>
+                        <button type="submit" id="send-btn" class="absolute right-2.5 h-10 w-10 bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white rounded-xl flex items-center justify-center transition shadow-sm">
+                            <i class="fa-solid fa-paper-plane text-sm"></i>
+                        </button>
+                    </form>
+                    <div class="flex items-center justify-between mt-2 px-1 text-xs text-slate-400">
+                        <span>Strict Prompt Library &amp; Anti-Fabrication Enforced</span>
+                        <span>Shift + Enter for new line</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- API Key Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col">
+            <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <div class="flex items-center space-x-2.5">
+                    <i class="fa-solid fa-key text-amber-500 text-lg"></i>
+                    <h3 class="font-bold text-base">Gemini API Key Settings</h3>
+                </div>
+                <button id="close-settings-modal" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1.5 rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <p class="text-sm text-slate-600 dark:text-slate-300">Enter your Google Gemini API key below. If left blank, environment default runtime key is used.</p>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">API Key</label>
+                    <input type="password" id="api-key-input" placeholder="AIzaSy..." class="w-full px-3.5 py-2.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm">
+                </div>
+            </div>
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex justify-end space-x-2">
+                <button id="cancel-settings-btn" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">Cancel</button>
+                <button id="save-settings-btn" class="bg-sky-600 hover:bg-sky-700 text-white font-medium px-5 py-2 rounded-xl text-sm transition shadow-sm">Save Key</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Master Prompt Rules Modal -->
+    <div id="master-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <div class="flex items-center space-x-2.5">
+                    <i class="fa-solid fa-file-shield text-sky-600 text-lg"></i>
+                    <h3 class="font-bold text-base">AI Business Analyst Assistant — Master Rules</h3>
+                </div>
+                <button id="close-master-modal" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1.5 rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4 overflow-y-auto text-sm text-slate-600 dark:text-slate-300">
+                <p>You are an AI Business Analyst Assistant designed to support Business Analysts with requirements analysis and business documentation. Your role is to transform raw, incomplete, or unstructured business requirements into clear, structured Business Analysis outputs.</p>
+                <h4 class="font-bold text-slate-900 dark:text-white mt-3">Anti-Fabrication &amp; Strict Rules:</h4>
+                <ul class="list-disc pl-5 space-y-1.5">
+                    <li>Do not invent business rules, requirements, processes, users, or system behaviour that have not been provided.</li>
+                    <li>When information is missing or ambiguous, clearly identify it and generate relevant clarification questions.</li>
+                    <li>Support all 6 prompt library tasks seamlessly.</li>
+                </ul>
+            </div>
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex justify-end">
+                <button id="close-master-modal-btn" class="bg-sky-600 hover:bg-sky-700 text-white font-medium px-5 py-2 rounded-xl text-sm transition shadow-sm">Got it</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prompt Library Modal -->
+    <div id="library-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <div class="flex items-center space-x-2.5">
+                    <i class="fa-solid fa-book-bookmark text-emerald-500 text-lg"></i>
+                    <h3 class="font-bold text-base">Prompt Library &amp; Task Prompts</h3>
+                </div>
+                <button id="close-library-modal" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1.5 rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-6 overflow-y-auto text-sm text-slate-600 dark:text-slate-300">
+                <p class="text-xs text-slate-500">Click any task prompt below to insert it directly into your chat session.</p>
+                
+                <div class="space-y-3">
+                    <button class="lib-task-btn w-full p-3.5 text-left rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 transition bg-slate-50 dark:bg-slate-800/50" data-prompt="Using only the requirement below, pull out the main business need, stakeholder, requested functionality, objectives, gaps, ambiguities, assumptions, and risks. Separate provided information from AI assumptions. Requirement: ">
+                        <div class="font-semibold text-xs text-emerald-600 dark:text-emerald-400 mb-1">Task 1: Requirement Analysis Prompt</div>
+                        <div class="text-xs text-slate-500 font-mono">Using only the requirement below, pull out the main business need, stakeholder, requested functionality...</div>
+                    </button>
+                    <button class="lib-task-btn w-full p-3.5 text-left rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 transition bg-slate-50 dark:bg-slate-800/50" data-prompt="Using only the requirement below, write a single User Story in the format: As a [user], I want [function], so that [benefit]. Do not add unsupported functionality. Requirement: ">
+                        <div class="font-semibold text-xs text-emerald-600 dark:text-emerald-400 mb-1">Task 2: User Story Prompt</div>
+                        <div class="text-xs text-slate-500 font-mono">Using only the requirement below, write a single User Story in the format: As a [user], I want [function]...</div>
+                    </button>
+                    <button class="lib-task-btn w-full p-3.5 text-left rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 transition bg-slate-50 dark:bg-slate-800/50" data-prompt="Using only the requirement below, write acceptance criteria in Given/When/Then format. Include positive and negative scenarios. Do not create rules that were not provided. Mark unknown rules as Requires clarification. Requirement: ">
+                        <div class="font-semibold text-xs text-emerald-600 dark:text-emerald-400 mb-1">Task 3: Acceptance Criteria Prompt</div>
+                        <div class="text-xs text-slate-500 font-mono">Using only the requirement below, write acceptance criteria in Given/When/Then format...</div>
+                    </button>
+                    <button class="lib-task-btn w-full p-3.5 text-left rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 transition bg-slate-50 dark:bg-slate-800/50" data-prompt="Using only the requirement and acceptance criteria below, generate a structured markdown table with columns: Test Case ID, Test Scenario, Preconditions, Test Steps, Expected Result, Type (Positive/Negative). Requirement: ">
+                        <div class="font-semibold text-xs text-emerald-600 dark:text-emerald-400 mb-1">Task 4: Test Cases Prompt</div>
+                        <div class="text-xs text-slate-500 font-mono">Using only the requirement and acceptance criteria below, generate a structured markdown table...</div>
+                    </button>
+                    <button class="lib-task-btn w-full p-3.5 text-left rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 transition bg-slate-50 dark:bg-slate-800/50" data-prompt="Using only the requirement below, list practical stakeholder clarification questions prioritizing users, business rules, validation, permissions, security, and data. Requirement: ">
+                        <div class="font-semibold text-xs text-emerald-600 dark:text-emerald-400 mb-1">Task 5: Clarification Questions Prompt</div>
+                        <div class="text-xs text-slate-500 font-mono">Using only the requirement below, list practical stakeholder clarification questions...</div>
+                    </button>
+                    <button class="lib-task-btn w-full p-3.5 text-left rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 transition bg-slate-50 dark:bg-slate-800/50" data-prompt="Switch to Prompt Engineering Mode. Analyse this prompt for weaknesses, explain improvements, produce an improved prompt, and explain expected output improvements. Prompt to evaluate: ">
+                        <div class="font-semibold text-xs text-emerald-600 dark:text-emerald-400 mb-1">Task 6: Prompt Engineering Mode Prompt</div>
+                        <div class="text-xs text-slate-500 font-mono">Switch to Prompt Engineering Mode. Analyse this prompt for weaknesses, explain improvements...</div>
+                    </button>
+                </div>
+            </div>
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex justify-end">
+                <button id="close-library-modal-btn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-5 py-2 rounded-xl text-sm transition shadow-sm">Close Library</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rule Compliance Verification Modal -->
+    <div id="verify-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <div class="flex items-center space-x-2.5">
+                    <i class="fa-solid fa-circle-check text-sky-600 text-lg"></i>
+                    <h3 class="font-bold text-base">Prompt Library Compliance Status</h3>
+                </div>
+                <button id="close-verify-modal" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1.5 rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4 overflow-y-auto text-sm text-slate-600 dark:text-slate-300">
+                <p class="text-xs text-slate-500">The assistant system instructions are fully aligned with your prompt library:</p>
+                <div class="space-y-3">
+                    <div class="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 flex items-start space-x-3">
+                        <i class="fa-solid fa-check-circle text-emerald-500 text-base mt-0.5"></i>
+                        <div>
+                            <div class="font-semibold text-slate-900 dark:text-white text-xs">Prompt Library Integration Active</div>
+                            <div class="text-xs text-slate-500 mt-0.5">All 6 prompt library task formats are directly supported and enforced in the system prompt.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex justify-end">
+                <button id="close-verify-modal-btn" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium px-5 py-2 rounded-xl text-sm transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let chats = JSON.parse(localStorage.getItem('ba_chats') || '[]');
+        let currentChatId = localStorage.getItem('ba_current_chat') || null;
+        let apiKey = localStorage.getItem('ba_gemini_api_key') || '';
+        let isDarkMode = localStorage.getItem('ba_dark_mode') === 'true' || 
+                         window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        // Master System Instruction incorporating the exact prompt library tasks
+        const masterSystemPrompt = `You are an AI Business Analyst Assistant designed to support Business Analysts with requirements analysis and business documentation.
+Your role is to transform raw, incomplete, or unstructured business requirements into clear, structured Business Analysis outputs.
+You must act as an assistant, not a replacement for the Business Analyst. Do not invent business rules, requirements, processes, users, or system behaviour that have not been provided. When information is missing or ambiguous, clearly identify it and generate relevant clarification questions.
+
+When evaluating or executing tasks from the prompt library, follow these exact guidelines:
+1. Requirement Analysis: Pull out the main business need, stakeholder, requested functionality, objectives, gaps, ambiguities, assumptions, and risks. Separate provided information from AI assumptions.
+2. User Story: Write in the format: As a [user], I want [function], so that [benefit]. Do not add unsupported functionality.
+3. Acceptance Criteria: Write in Given/When/Then format including positive and negative scenarios. Mark unknown rules as "Requires clarification."
+4. Test Cases: Generate a structured markdown table with columns: Test Case ID, Test Scenario, Preconditions, Test Steps, Expected Result, Type (Positive/Negative).
+5. Clarification Questions: List practical stakeholder clarification questions prioritizing users, business rules, validation, permissions, security, and data.
+6. Prompt Engineering Mode: When asked, analyse prompt weaknesses, explain improvements, produce an improved prompt, and explain expected output improvements.`;
+
+        const chatListEl = document.getElementById('chat-list');
+        const chatMessagesEl = document.getElementById('chat-messages');
+        const emptyStateEl = document.getElementById('empty-state');
+        const userInputEl = document.getElementById('user-input');
+        const chatFormEl = document.getElementById('chat-form');
+        const sendBtnEl = document.getElementById('send-btn');
+        const typingIndicatorEl = document.getElementById('typing-indicator');
+        const currentChatTitleEl = document.getElementById('current-chat-title');
+        const currentModeBadgeEl = document.getElementById('current-mode-badge');
+        
+        const sidebarEl = document.getElementById('sidebar');
+        const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+        const openSidebarBtn = document.getElementById('open-sidebar');
+        const closeSidebarBtn = document.getElementById('close-sidebar');
+
+        const settingsModal = document.getElementById('settings-modal');
+        const settingsBtn = document.getElementById('settings-btn');
+        const closeSettingsModal = document.getElementById('close-settings-modal');
+        const cancelSettingsBtn = document.getElementById('cancel-settings-btn');
+        const saveSettingsBtn = document.getElementById('save-settings-btn');
+        const apiKeyInput = document.getElementById('api-key-input');
+        const apiWarningBanner = document.getElementById('api-warning-banner');
+        const bannerSettingsBtn = document.getElementById('banner-settings-btn');
+
+        const masterModal = document.getElementById('master-modal');
+        const masterPromptInfoBtn = document.getElementById('master-prompt-info-btn');
+        const closeMasterModal = document.getElementById('close-master-modal');
+        const closeMasterModalBtn = document.getElementById('close-master-modal-btn');
+
+        const libraryModal = document.getElementById('library-modal');
+        const promptLibraryBtn = document.getElementById('prompt-library-btn');
+        const closeLibraryModal = document.getElementById('close-library-modal');
+        const closeLibraryModalBtn = document.getElementById('close-library-modal-btn');
+
+        const verifyModal = document.getElementById('verify-modal');
+        const verifyRulesBtn = document.getElementById('verify-rules-btn');
+        const closeVerifyModal = document.getElementById('close-verify-modal');
+        const closeVerifyModalBtn = document.getElementById('close-verify-modal-btn');
+        
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeText = document.getElementById('theme-text');
+        const newChatBtn = document.getElementById('new-chat-btn');
+        const clearAllBtn = document.getElementById('clear-all-btn');
+        const exportChatBtn = document.getElementById('export-chat-btn');
+
+        function parseMarkdown(text) {
+            if (!text) return '';
+            let html = escapeHtml(text);
+            
+            html = html.replace(/```([a-z]*)\n([\s\S]*?)```/g, (match, lang, code) => {
+                return `<pre><code>${code.trim()}</code></pre>`;
+            });
+
+            html = html.replace(/`([^`]+)`/g, '<code class="bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded text-xs font-mono">$1</code>');
+            html = html.replace(/^### (.*$)/gim, '<h3 class="text-base font-bold mt-4 mb-2 text-slate-900 dark:text-white">$1</h3>');
+            html = html.replace(/^## (.*$)/gim, '<h2 class="text-lg font-bold mt-5 mb-2 text-slate-900 dark:text-white">$1</h2>');
+            html = html.replace(/^# (.*$)/gim, '<h1 class="text-xl font-bold mt-6 mb-3 text-slate-900 dark:text-white">$1</h1>');
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold">$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em class="italic">$1</em>');
+
+            const lines = html.split('\n');
+            let inTable = false;
+            let tableHtml = '';
+            let processedLines = [];
+
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i].trim();
+                if (line.startsWith('|') && line.endsWith('|')) {
+                    if (!inTable) {
+                        inTable = true;
+                        tableHtml = '<div class="overflow-x-auto my-3"><table>';
+                    }
+                    if (line.includes('---')) continue;
+                    const cells = line.split('|').filter((c, idx, arr) => idx > 0 && idx < arr.length - 1).map(c => c.trim());
+                    const isHeader = !tableHtml.includes('<th>');
+                    tableHtml += '<tr>';
+                    cells.forEach(cell => {
+                        tableHtml += isHeader ? `<th>${cell}</th>` : `<td>${cell}</td>`;
+                    });
+                    tableHtml += '</tr>';
+                } else {
+                    if (inTable) {
+                        tableHtml += '</table></div>';
+                        processedLines.push(tableHtml);
+                        inTable = false;
+                        tableHtml = '';
+                    }
+                    processedLines.push(line);
+                }
+            }
+            if (inTable) {
+                tableHtml += '</table></div>';
+                processedLines.push(tableHtml);
+            }
+            html = processedLines.join('<br>');
+            html = html.replace(/<br>- (.*)/g, '<li class="ml-4 list-disc">$1</li>');
+            html = html.replace(/<br>\* (.*)/g, '<li class="ml-4 list-disc">$1</li>');
+            return html;
+        }
+
+        function checkApiKeyStatus() {
+            if (!apiKey) {
+                apiWarningBanner.classList.remove('hidden');
+            } else {
+                apiWarningBanner.classList.add('hidden');
+            }
+        }
+        checkApiKeyStatus();
+
+        settingsBtn.addEventListener('click', () => {
+            apiKeyInput.value = apiKey;
+            settingsModal.classList.remove('hidden');
+        });
+        bannerSettingsBtn.addEventListener('click', () => {
+            apiKeyInput.value = apiKey;
+            settingsModal.classList.remove('hidden');
+        });
+        closeSettingsModal.addEventListener('click', () => settingsModal.classList.add('hidden'));
+        cancelSettingsBtn.addEventListener('click', () => settingsModal.classList.add('hidden'));
+        saveSettingsBtn.addEventListener('click', () => {
+            apiKey = apiKeyInput.value.trim();
+            localStorage.setItem('ba_gemini_api_key', apiKey);
+            settingsModal.classList.add('hidden');
+            checkApiKeyStatus();
+        });
+
+        function updateTheme() {
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+                themeIcon.className = "fa-solid fa-sun text-amber-400";
+                themeText.textContent = "Light Mode";
+            } else {
+                document.documentElement.classList.remove('dark');
+                themeIcon.className = "fa-solid fa-moon text-slate-400";
+                themeText.textContent = "Dark Mode";
+            }
+            localStorage.setItem('ba_dark_mode', isDarkMode);
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            updateTheme();
+        });
+        updateTheme();
+
+        function toggleSidebar(open) {
+            if (open) {
+                sidebarEl.classList.remove('-translate-x-full');
+                sidebarBackdrop.classList.remove('hidden');
+            } else {
+                sidebarEl.classList.add('-translate-x-full');
+                sidebarBackdrop.classList.add('hidden');
+            }
+        }
+        openSidebarBtn.addEventListener('click', () => toggleSidebar(true));
+        closeSidebarBtn.addEventListener('click', () => toggleSidebar(false));
+        sidebarBackdrop.addEventListener('click', () => toggleSidebar(false));
+
+        masterPromptInfoBtn.addEventListener('click', () => masterModal.classList.remove('hidden'));
+        closeMasterModal.addEventListener('click', () => masterModal.classList.add('hidden'));
+        closeMasterModalBtn.addEventListener('click', () => masterModal.classList.add('hidden'));
+        masterModal.addEventListener('click', (e) => {
+            if (e.target === masterModal) masterModal.classList.add('hidden');
+        });
+
+        promptLibraryBtn.addEventListener('click', () => libraryModal.classList.remove('hidden'));
+        closeLibraryModal.addEventListener('click', () => libraryModal.classList.add('hidden'));
+        closeLibraryModalBtn.addEventListener('click', () => libraryModal.classList.add('hidden'));
+        libraryModal.addEventListener('click', (e) => {
+            if (e.target === libraryModal) libraryModal.classList.add('hidden');
+        });
+
+        verifyRulesBtn.addEventListener('click', () => verifyModal.classList.remove('hidden'));
+        closeVerifyModal.addEventListener('click', () => verifyModal.classList.add('hidden'));
+        closeVerifyModalBtn.addEventListener('click', () => verifyModal.classList.add('hidden'));
+        verifyModal.addEventListener('click', (e) => {
+            if (e.target === verifyModal) verifyModal.classList.add('hidden');
+        });
+
+        document.querySelectorAll('.lib-task-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const promptText = btn.getAttribute('data-prompt');
+                userInputEl.value = promptText;
+                libraryModal.classList.add('hidden');
+                userInputEl.focus();
+                autoResizeTextarea();
+            });
+        });
+
+        function getCurrentChat() {
+            return chats.find(c => c.id === currentChatId);
+        }
+
+        function saveChats() {
+            localStorage.setItem('ba_chats', JSON.stringify(chats));
+            localStorage.setItem('ba_current_chat', currentChatId || '');
+            renderChatList();
+        }
+
+        function createNewChat() {
+            const newChat = {
+                id: 'ba_chat_' + Date.now(),
+                title: 'New Requirement Session',
+                mode: 'Prompt Library Enforced',
+                messages: []
+            };
+            chats.unshift(newChat);
+            currentChatId = newChat.id;
+            saveChats();
+            renderCurrentChat();
+            toggleSidebar(false);
+        }
+
+        newChatBtn.addEventListener('click', createNewChat);
+
+        clearAllBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear all history?')) {
+                chats = [];
+                currentChatId = null;
+                saveChats();
+                renderCurrentChat();
+                toggleSidebar(false);
+            }
+        });
+
+        exportChatBtn.addEventListener('click', () => {
+            const currentChat = getCurrentChat();
+            if (!currentChat || currentChat.messages.length === 0) {
+                alert('No documentation to export.');
+                return;
+            }
+            const markdownContent = `# Business Analyst Documentation: ${currentChat.title}\n\n` + 
+                currentChat.messages.map(m => `### ${m.role === 'user' ? 'Prompt / Request' : 'AI Output'}\n\n${m.text}\n`).join('\n---\n\n');
+            
+            const blob = new Blob([markdownContent], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentChat.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_ba_docs.md`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        function renderChatList() {
+            chatListEl.innerHTML = '';
+            if (chats.length === 0) {
+                chatListEl.innerHTML = `<div class="p-4 text-center text-xs text-slate-400">No active sessions</div>`;
+                return;
+            }
+
+            chats.forEach(chat => {
+                const isActive = chat.id === currentChatId;
+                const div = document.createElement('div');
+                div.className = `group flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium cursor-pointer transition ${isActive ? 'bg-sky-50 dark:bg-sky-950/40 text-sky-600 dark:text-sky-400' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`;
+                
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3 truncate flex-1">
+                        <i class="fa-solid fa-file-lines text-xs opacity-70"></i>
+                        <span class="truncate">${escapeHtml(chat.title)}</span>
+                    </div>
+                    <button class="delete-chat opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-500 p-1 transition" data-id="${chat.id}" title="Delete session">
+                        <i class="fa-solid fa-trash-can text-xs"></i>
+                    </button>
+                `;
+
+                div.addEventListener('click', (e) => {
+                    if (e.target.closest('.delete-chat')) return;
+                    currentChatId = chat.id;
+                    saveChats();
+                    renderCurrentChat();
+                    toggleSidebar(false);
+                });
+
+                div.querySelector('.delete-chat').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    chats = chats.filter(c => c.id !== chat.id);
+                    if (currentChatId === chat.id) {
+                        currentChatId = chats.length > 0 ? chats[0].id : null;
+                    }
+                    saveChats();
+                    renderCurrentChat();
+                });
+
+                chatListEl.appendChild(div);
+            });
+        }
+
+        function updateHeaderInfo() {
+            const currentChat = getCurrentChat();
+            if (currentChat) {
+                currentChatTitleEl.textContent = currentChat.title;
+                currentModeBadgeEl.textContent = `Mode: ${currentChat.mode || 'Prompt Library Enforced'}`;
+            } else {
+                currentChatTitleEl.textContent = 'New Requirement Session';
+                currentModeBadgeEl.textContent = 'Mode: Prompt Library Enforced';
+            }
+        }
+
+        function renderCurrentChat() {
+            updateHeaderInfo();
+            chatMessagesEl.innerHTML = '';
+            const currentChat = getCurrentChat();
+
+            if (!currentChat || currentChat.messages.length === 0) {
+                emptyStateEl.classList.add('hidden');
+                chatMessagesEl.appendChild(emptyStateEl);
+                emptyStateEl.classList.remove('hidden');
+                return;
+            }
+
+            emptyStateEl.classList.add('hidden');
+            currentChat.messages.forEach(msg => {
+                appendMessageNode(msg.role, msg.text, false);
+            });
+
+            scrollToBottom();
+        }
+
+        function appendMessageNode(role, text, animate = true) {
+            emptyStateEl.classList.add('hidden');
+            const isUser = role === 'user';
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex items-start space-x-3 ${isUser ? 'flex-row-reverse space-x-reverse' : ''}`;
+
+            const avatar = document.createElement('div');
+            avatar.className = `h-8 w-8 rounded-full flex items-center justify-center text-xs shrink-0 shadow-sm ${isUser ? 'bg-slate-800 dark:bg-slate-700 text-white' : 'bg-sky-600 text-white'}`;
+            avatar.innerHTML = isUser ? '<i class="fa-solid fa-user"></i>' : '<i class="fa-solid fa-briefcase"></i>';
+
+            const bubble = document.createElement('div');
+            bubble.className = `max-w-[88%] sm:max-w-[80%] rounded-2xl px-5 py-4 text-sm shadow-sm ${isUser ? 'bg-sky-600 text-white rounded-tr-sm' : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-tl-sm message-content relative group'}`;
+
+            if (isUser) {
+                bubble.textContent = text;
+            } else {
+                bubble.innerHTML = parseMarkdown(text);
+                bubble.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'absolute top-3 right-3 opacity-0 group-hover:opacity-100 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-sky-600 px-2.5 py-1 rounded-lg text-xs font-medium transition shadow-sm flex items-center space-x-1.5';
+                copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i><span>Copy</span>';
+                copyBtn.addEventListener('click', () => {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    copyBtn.innerHTML = '<i class="fa-solid fa-check text-emerald-500"></i><span>Copied!</span>';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i><span>Copy</span>';
+                    }, 2000);
+                });
+                bubble.appendChild(copyBtn);
+            }
+
+            wrapper.appendChild(avatar);
+            wrapper.appendChild(bubble);
+            chatMessagesEl.appendChild(wrapper);
+            if (animate) scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        }
+
+        document.querySelectorAll('.quick-prompt').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const text = btn.getAttribute('data-prompt');
+                userInputEl.value = text;
+                userInputEl.focus();
+                autoResizeTextarea();
+            });
+        });
+
+        function autoResizeTextarea() {
+            userInputEl.style.height = 'auto';
+            userInputEl.style.height = Math.min(userInputEl.scrollHeight, 140) + 'px';
+        }
+        userInputEl.addEventListener('input', autoResizeTextarea);
+
+        async function callGeminiAPI(messages, retries = 3, delay = 1000) {
+            const keyToUse = apiKey || ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${keyToUse}`;
+
+            const contents = messages.map(m => ({
+                role: m.role === 'user' ? 'user' : 'model',
+                parts: [{ text: m.text }]
+            }));
+
+            const payload = {
+                contents: contents,
+                systemInstruction: {
+                    parts: [{ text: masterSystemPrompt }]
+                }
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    if (response.status === 429 && retries > 0) {
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        return callGeminiAPI(messages, retries - 1, delay * 2);
+                    }
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.error?.message || `API error: ${response.status} ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    return candidate.content.parts[0].text;
+                } else {
+                    throw new Error('Invalid response structure received from Gemini API.');
+                }
+            } catch (error) {
+                if (retries > 0) {
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return callGeminiAPI(messages, retries - 1, delay * 2);
+                }
+                throw error;
+            }
+        }
+
+        async function handleSendMessage(e) {
+            if (e) e.preventDefault();
+            const text = userInputEl.value.trim();
+            if (!text) return;
+
+            if (!currentChatId || !chats.some(c => c.id === currentChatId)) {
+                createNewChat();
+            }
+
+            const currentChat = getCurrentChat();
+
+            if (text.toLowerCase().includes('prompt engineering mode')) {
+                currentChat.mode = 'Prompt Engineering Mode';
+            } else {
+                currentChat.mode = 'Prompt Library Enforced';
+            }
+
+            currentChat.messages.push({ role: 'user', text: text });
+            
+            if (currentChat.messages.length === 1) {
+                currentChat.title = text.length > 32 ? text.substring(0, 32) + '...' : text;
+            }
+
+            saveChats();
+            renderCurrentChat();
+
+            userInputEl.value = '';
+            autoResizeTextarea();
+            userInputEl.focus();
+
+            typingIndicatorEl.classList.remove('hidden');
+            scrollToBottom();
+            sendBtnEl.disabled = true;
+
+            try {
+                const aiResponseText = await callGeminiAPI(currentChat.messages);
+                currentChat.messages.push({ role: 'model', text: aiResponseText });
+                saveChats();
+                typingIndicatorEl.classList.add('hidden');
+                appendMessageNode('model', aiResponseText, true);
+            } catch (err) {
+                console.error(err);
+                typingIndicatorEl.classList.add('hidden');
+                const errorMsg = `⚠️ **Error communicating with Gemini API**: ${err.message}\n\nPlease check your API key in settings or verify network connectivity.`;
+                currentChat.messages.push({ role: 'model', text: errorMsg });
+                saveChats();
+                appendMessageNode('model', errorMsg, true);
+            } finally {
+                sendBtnEl.disabled = false;
+            }
+        }
+
+        chatFormEl.addEventListener('submit', handleSendMessage);
+        userInputEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+            }
+        });
+
+        if (chats.length > 0 && !currentChatId) {
+            currentChatId = chats[0].id;
+        } else if (chats.length === 0) {
+            createNewChat();
+        }
+        renderChatList();
+        renderCurrentChat();
+    </script>
+
+</body></html>
