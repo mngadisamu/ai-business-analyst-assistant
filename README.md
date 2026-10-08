@@ -1,314 +1,110 @@
 # AI Business Analyst Assistant
 
-## 1. Project Overview
+Week 2 project, CAPACITI x Clickatell AI Bootcamp (April 2026).
 
-The AI Business Analyst Assistant is an AI-powered content generation tool designed to assist Business Analysts with common requirements and documentation activities.
+An AI assistant that turns a raw business requirement into structured Business Analysis documentation: requirement analysis, user story, acceptance criteria, test cases, stakeholder questions and a quality check. It is driven by a master prompt that tells the model to flag gaps instead of inventing requirements, and the Business Analyst stays responsible for validating everything it produces.
 
-Business Analysts often work with information gathered from stakeholders, meetings, emails, and business processes. This information must be transformed into structured documentation such as user stories, acceptance criteria, test cases, and stakeholder clarification questions.
+![A generated requirement analysis for the requirement "Admin users need to reset user passwords securely"](docs/screenshots/ba-assistant-output.png)
 
-The purpose of this project is to explore how generative AI and prompt engineering can assist with this process while keeping the Business Analyst responsible for reviewing, validating, and refining the generated outputs.
+## Contents
 
----
+* [Project overview](#project-overview)
+* [What was built](#what-was-built)
+* [Example outputs](#example-outputs)
+* [Prompt engineering](#prompt-engineering)
+* [Findings](#findings)
+* [Human validation](#human-validation)
+* [Limitations](#limitations)
+* [Documentation](#documentation)
 
-## 2. Problem Statement
+## Project overview
 
-Business analysis involves transforming business needs and stakeholder requirements into clear and structured documentation.
-
-However, requirements are not always presented in a structured format. A stakeholder may provide a short statement such as:
-
-> "We need employees to be able to apply for leave online."
-
-A Business Analyst may need to determine:
-
-* Who is the user?
-* What exactly should the system allow the user to do?
-* What information is required?
-* What happens after submission?
-* Who approves the request?
-* What happens if information is missing?
-* What are the possible negative scenarios?
-
-These questions must then be translated into appropriate BA documentation.
-
-The repetitive nature of creating this documentation provides an opportunity to investigate how generative AI can assist Business Analysts.
-
----
-
-## 3. Project Objective
-
-The objective of this project is to develop an AI-assisted workflow that can transform raw requirements into structured Business Analysis outputs.
-
-The project will investigate whether carefully designed prompts can produce more consistent and useful outputs than simple, general instructions.
-
-The main question guiding the project is:
-
-**"How can prompt engineering be used to create an AI assistant that helps Business Analysts transform raw requirements into structured documentation?"**
-
----
-
-## 4. Proposed Solution
-
-The proposed solution is an AI Business Analyst Assistant that accepts a business requirement as input and generates different types of BA content.
-
-The assistant will provide several functions:
-
-### User Story Generator
-
-Transforms a requirement into a structured user story using:
-
-**As a [user], I want [function], so that [benefit].**
-
-### Acceptance Criteria Generator
-
-Converts a user story into acceptance criteria using a structured format such as:
-
-**Given → When → Then**
-
-Both positive and negative scenarios can be considered.
-
-### Test Case Generator
-
-Uses the requirement and acceptance criteria to generate structured test cases.
-
-### Requirement Analysis
-
-Analyses a requirement and identifies potential:
-
-* Missing information
-* Ambiguities
-* Assumptions
-* Areas requiring clarification
-
-### Stakeholder Question Generator
-
-Generates questions that a Business Analyst can ask stakeholders to clarify incomplete requirements.
-
----
-
-## 5. Target Users
-
-The primary target user is a Business Analyst.
-
-The concept could also be useful for:
-
-* Junior Business Analysts
-* Business Analysis interns
-* Product owners
-* Project teams
-* QA/test teams
-* Developers who need clearer requirements
-
-The tool is intended to support these users rather than replace their decision-making or validation responsibilities.
-
----
-
-## 6. Prompt Engineering Approach
-
-Prompt engineering is a central part of this project.
-
-Instead of creating one generic prompt, the assistant will use a library of specialized prompts for different BA activities.
-
-Each prompt will be tested and refined based on the quality and consistency of its output.
-
-The prompts will consider elements such as:
-
-* Role
-* Context
-* Task
-* Constraints
-* Output format
-* Required information
-* Instructions for handling missing information
-
-For example, an initial prompt might be:
-
-> "Convert this requirement into a user story."
-
-The output can then be evaluated.
-
-If the AI produces a vague user story or makes assumptions, the prompt can be refined to provide additional instructions.
-
-A more detailed prompt could instruct the AI to:
-
-* Act as a Business Analyst
-* Use a specific user-story format
-* Avoid unsupported assumptions
-* Identify missing information
-* Produce structured output
-* Ask clarification questions where necessary
-
-The process therefore becomes:
-
-**Prompt → Test → Evaluate → Refine → Test Again → Final Prompt**
-
----
-
-## 7. Prompt Library
-
-The project will contain a reusable prompt library.
-
-Example categories include:
-
-### Requirements
-
-* Requirement analysis prompt
-* Requirement clarification prompt
-* Ambiguity detection prompt
-
-### User Stories
-
-* User story generation prompt
-* User story refinement prompt
-
-### Acceptance Criteria
-
-* Acceptance criteria generation prompt
-* Positive and negative scenario prompt
-
-### Testing
-
-* Test case generation prompt
-* Negative test scenario prompt
-
-### Stakeholder Communication
-
-* Requirement clarification email prompt
-* Stakeholder question generation prompt
-* Meeting summary prompt
-
-The prompt library will allow the same workflows to be reused rather than creating a new prompt from scratch each time.
-
----
-
-## 8. Example Use Case
-
-A stakeholder provides the following requirement:
+Business Analysts work from information gathered in meetings, emails and conversations. That information has to become structured documentation such as user stories, acceptance criteria, test cases and clarification questions. A stakeholder may say only:
 
 > "Employees should be able to apply for leave online."
 
-The Business Analyst enters the requirement into the AI Assistant.
+The analyst then has to work out who the users are, what information is needed, who approves, what happens when information is missing, and what the negative scenarios are.
 
-The assistant could generate:
+This project explores whether a carefully designed prompt can make an AI assistant useful for that work, while keeping the analyst responsible for reviewing and validating the result.
 
-### User Story
+The question it asks: **how can prompt engineering be used to create an AI assistant that helps Business Analysts turn raw requirements into structured documentation?**
 
-**As an employee, I want to submit a leave application online so that I can request leave digitally.**
+## What was built
 
-### Acceptance Criteria
+BA Assistant Studio is a web app (React, TypeScript, Vite, Gemini API) built in Google AI Studio. A Business Analyst types a raw requirement and the assistant returns six outputs, as set out in its master prompt:
 
-**Scenario 1 — Successful submission**
+1. **Requirement analysis:** business need, stakeholders, objectives, missing information, ambiguities, assumptions and risks
+2. **User story** in the format *As a [user], I want [function], so that [benefit]*
+3. **Acceptance criteria** in Given / When / Then, with positive and negative scenarios
+4. **Test cases** in a table: ID, scenario, preconditions, steps, expected result and type
+5. **Clarification questions** for stakeholders
+6. **Requirement quality check and BA review notes:** clarity, completeness, testability and feasibility
 
-Given an employee is logged into the system
-When the employee submits a valid leave request
-Then the system should record the leave request.
+Other features:
 
-**Scenario 2 — Missing information**
+* **Prompt Engineering Mode:** when asked to improve, compare or evaluate a prompt, the assistant analyses its weaknesses and proposes a refined version.
+* **Master Prompt Rules:** the rules that govern the assistant can be viewed in the app.
+* Quick requirement templates, saved session history, Export Markdown, dark mode and an API key setting.
 
-Given an employee has not provided all required information
-When the employee submits the request
-Then the system should display a validation message.
+| | |
+| --- | --- |
+| ![Home screen with quick requirement templates](docs/screenshots/ba-assistant-home.png) | ![The master rules: six outputs and Prompt Engineering Mode](docs/screenshots/ba-assistant-master-rules.png) |
 
-### Stakeholder Questions
+## Example outputs
 
-The assistant could also identify questions such as:
+Both outputs below were generated by the assistant and exported unedited, apart from Markdown formatting.
 
-1. What types of leave should employees be able to request?
-2. Who approves the leave request?
-3. What information is required?
-4. Can employees cancel submitted requests?
-5. What happens when an employee has insufficient leave balance?
+| Requirement | Output |
+| --- | --- |
+| Admin users need to reset user passwords securely | [docs/examples/admin-password-reset.md](docs/examples/admin-password-reset.md) |
+| Employees should be able to apply for leave online | [docs/examples/leave-application.md](docs/examples/leave-application.md) |
 
-The Business Analyst would then review these outputs and determine which are appropriate for the actual project.
+In both, the assistant listed the unknowns (reset method, leave types, approvers, balances) as missing information and clarification questions instead of choosing for the analyst, and marked unknown rules "Requires clarification".
 
----
+## Prompt engineering
 
-## 9. Testing and Prompt Optimization
+The assistant runs on one master prompt that sets:
 
-The project will demonstrate prompt optimization by comparing different versions of prompts.
+* **Role:** an assistant to the Business Analyst, not a replacement
+* **Six outputs** and a fixed output structure
+* **Rules:** do not fabricate requirements, do not hide assumptions, keep outputs traceable to the original requirement, prioritise clarification over assumptions, and do not treat AI-generated content as final
+* **Handling of ambiguous requirements**, using the leave-application example
+* **Prompt Engineering Mode** for improving prompts: **Prompt → Test → Evaluate → Refine → Test Again → Final Prompt**
 
-### Version 1
+The full prompt, split into reusable task prompts, is in the [prompt library](docs/prompt-library.md).
 
-A simple prompt is used to generate a user story.
+## Findings
 
-The output is evaluated for:
+I tested the master prompt on the two requirements above and evaluated each output against a checklist (assumptions labelled, unknown rules marked, no invented requirements, test cases traced to acceptance criteria, output structure followed). The full evaluation is in [docs/prompt-optimization.md](docs/prompt-optimization.md).
 
-* Structure
-* Relevance
-* Completeness
-* Accuracy
-* Unnecessary assumptions
+* **Strength:** the assistant reliably identifies missing information and asks relevant stakeholder questions.
+* **Weakness 1:** it adds specifics the requirement does not state (for example a "403 Forbidden" error, audit-log fields, a leave balance check).
+* **Weakness 2:** some test cases have no matching acceptance criterion.
+* **Weakness 3:** the app's headings do not fully match the master prompt's seven sections.
 
-### Version 2
+The next step is to refine the prompt to address these, re-run the same two requirements, and compare the two versions. The comparison table is prepared but not yet filled in, because that needs a new run of the refined prompt.
 
-Additional context and formatting requirements are introduced.
+## Human validation
 
-The output is tested again.
-
-### Version 3
-
-Further constraints are introduced based on the previous results.
-
-The final prompt is then documented in the prompt library.
-
-This creates a clear record of how the prompt evolved.
-
-The case study will therefore demonstrate not only the final AI output but also the **reasoning and experimentation behind the prompt design**.
-
----
-
-## 10. Human Validation
-
-The AI-generated content will not automatically become final project documentation.
-
-The proposed workflow is:
+AI-generated content does not become final documentation. The workflow is:
 
 **Requirement → AI Assistant → Generated Output → BA Review → Validation → Final Documentation**
 
-The Business Analyst remains responsible for determining whether the generated information accurately represents the business requirement.
+The analyst decides whether the output represents the business requirement. This matters because the model can produce content that is incomplete, wrong, or based on assumptions nobody supplied, and the findings above show it does.
 
-This is important because AI may generate information that is incomplete, incorrect, or based on assumptions that were not provided.
+## Limitations
 
----
+* Output depends on the model and can differ between runs. Two recorded examples are not a test of reliability.
+* The assistant drafts; it does not replace stakeholder conversations or the analyst's judgement.
+* The prompt refinement and version comparison are planned, not yet run.
 
-## 11. Expected Benefits
+## Documentation
 
-The proposed assistant could help:
+* [Case study](docs/case-study.md): problem, approach, build, findings and what I learned
+* [Prompt library](docs/prompt-library.md): the master prompt and reusable task prompts
+* [Prompt optimization](docs/prompt-optimization.md): evaluation of the outputs, planned refinements and comparison template
+* [Example outputs](docs/examples/)
 
-* Reduce repetitive documentation work
-* Provide structured starting points for BA deliverables
-* Generate clarification questions
-* Improve consistency across documentation
-* Provide reusable prompt templates
-* Support junior Business Analysts during documentation activities
-* Demonstrate practical use of generative AI in Business Analysis
+## Links
 
-The project will focus on **assistance and productivity**, rather than treating AI-generated content as automatically correct.
-
----
-
-## 12. Project Deliverables
-
-The project will produce:
-
-1. **AI Business Analyst Assistant**
-2. **Prompt Library**
-3. **Example generated BA outputs**
-4. **Prompt optimization experiments**
-5. **Prompt Engineering Case Study**
-6. **Project documentation**
-7. **GitHub repository**
-8. **Portfolio project page**
-
-These deliverables align with the Week 2 requirement for an individual content-generation project, a prompt library, demonstrated prompt optimization, and a published individual project.
-
----
-
-## 13. Conclusion
-
-The AI Business Analyst Assistant explores how generative AI can be applied to a practical Business Analysis problem: transforming unstructured requirements into structured documentation.
-
-The project combines existing Business Analysis practices with prompt engineering to create a reusable AI-assisted workflow.
-
-Rather than focusing only on the final AI-generated content, the project documents the process of designing, testing, evaluating, and refining prompts.
-
-The final result will demonstrate how AI can be incorporated into a Business Analyst's workflow while maintaining human review and validation.
+* Portfolio: [mngadisamu-github-ebg8ypcck-team-ai-1c57.vercel.app](https://mngadisamu-github-ebg8ypcck-team-ai-1c57.vercel.app/)
